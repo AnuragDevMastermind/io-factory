@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div style="display: flex">
+      <p style="margin: 0">Enter block height's values:</p>
+      <input
+        id="txtInput"
+        autocomplete="off"
+        oninput="checkValidation()"
+        style="margin-left: 10px; margin-right: 10px"
+        type="text"
+        placeholder="example - 0,4,0,0,0,6,0,6,4,0"
+      />
+      <p id="txtValidation" style="margin: 0"></p>
+    </div>
+    <button
+      id="btnSubmit"
+      style="margin-top: 20px; width: 150px; height: 25px"
+      onclick="btnSubmitClick()"
+      disabled
+    >
+      submit
+    </button>
+
+    <div style="height: 40px"></div>
+
+    <div id="result"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
