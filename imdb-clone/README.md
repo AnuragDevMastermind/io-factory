@@ -8,7 +8,7 @@ Before running this project, ensure you have the following prerequisites install
 
 - [MongoDB](https://www.mongodb.com/): Make sure MongoDB is installed and running on your system.
 
-- [Turbo](https://turbo.fyi/): Turbo is used for creating monorepos. If npm is already installed, you can install Turbo globally by running: npm install turbo --global
+- [Turbo](https://turbo.build/repo/docs): Turbo is used for creating monorepos. If npm is already installed, you can install Turbo globally by running: npm install turbo --global
 
 ## Installation
 
