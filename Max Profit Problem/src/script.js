@@ -1,34 +1,79 @@
 function maxProfit(timeUnit) {
-  const propertyType = [
-    { propertyName: "Theatre", earningAfterCompletion: 1500, completionTime: 5 },
-    { propertyName: "Pub", earningAfterCompletion: 1000, completionTime: 4 },
-    { propertyName: "Commercial Park", earningAfterCompletion: 3000, completionTime: 10 },
-  ];
+  const maxTheatres = Math.floor(timeUnit / 5)
+  const maxPubs = Math.floor(timeUnit / 4)
+  const maxParks = Math.floor(timeUnit / 10)
 
-  let maximumEarning = 0;
-  const solution = { T: 0, P: 0, C: 0 };
+  let maxEarnings = 0
+  let solutions = []
 
-  propertyType.forEach((property, index) => {
-    const count = Math.floor(timeUnit / property.completionTime);
-    let earnings = 0;
-
-    for (let i = 0; i < count; i++) {
-      timeUnit -= property.completionTime;
-      earnings += timeUnit * property.earningAfterCompletion;
+  function exploreCombinations(remainingTime, theatres, pubs, parks, earnings, currentSolution) {
+    if (remainingTime < 0) return
+    if (earnings > maxEarnings) {
+      maxEarnings = earnings
+      solutions = [currentSolution]
+    } else if (earnings === maxEarnings) {
+      solutions.push(currentSolution)
     }
-
-    if (earnings > maximumEarning) {
-      maximumEarning = earnings;
-      solution[property.propertyName.charAt(0)] = count;
+    if (theatres < maxTheatres) {
+      exploreCombinations(
+        remainingTime - 5,
+        theatres + 1,
+        pubs,
+        parks,
+        earnings + (remainingTime - 5) * 1500,
+        [...currentSolution, 'T']
+      )
     }
-  });
+    if (pubs < maxPubs) {
+      exploreCombinations(
+        remainingTime - 4,
+        theatres,
+        pubs + 1,
+        parks,
+        earnings + (remainingTime - 4) * 1000,
+        [...currentSolution, 'P']
+      )
+    }
+    if (parks < maxParks) {
+      exploreCombinations(
+        remainingTime - 10,
+        theatres,
+        pubs,
+        parks + 1,
+        earnings + (remainingTime - 10) * 3000,
+        [...currentSolution, 'C']
+      )
+    }
+  }
 
-  return { maximumEarning, solution };
+  exploreCombinations(timeUnit, 0, 0, 0, 0, [])
+
+  const output = solutions.map(solution => {
+    const counts = { T: 0, P: 0, C: 0 }
+    solution.forEach(property => counts[property]++)
+    return `T: ${counts.T} P: ${counts.P} C: ${counts.C}`
+  })
+
+  return [maxEarnings, output]
 }
 
-const timeUnit = 13;
-const result = maxProfit(timeUnit);
+const testCases = [
+  [7, 3000],
+  [8, 4500],
+  [13, 16500],
+]
 
-console.log(`Time Unit: ${timeUnit}`);
-console.log(`Earnings: $${result.maximumEarning}`);
-console.log(`Solutions: T:${result.solution.T} P:${result.solution.P} C:${result.solution.C}`);
+testCases.forEach(([timeUnit, expectedEarnings]) => {
+  const [earnings, solution] = maxProfit(timeUnit)
+  console.log(`Time Unit: ${timeUnit}`)
+  console.log(`Earnings: $${earnings}`)
+  if (earnings === expectedEarnings) {
+    console.log("Solutions:")
+    solution.forEach((sol, index) => {
+      console.log(`${index + 1}. ${sol}`)
+    })
+  } else {
+    console.log("Incorrect solution!")
+  }
+  console.log()
+})
