@@ -1,79 +1,206 @@
-function maxProfit(timeUnit) {
-  const maxTheatres = Math.floor(timeUnit / 5)
-  const maxPubs = Math.floor(timeUnit / 4)
-  const maxParks = Math.floor(timeUnit / 10)
+// Constants
+const timeUnit = 13;
+const theaterBuildTime = 5;
+const pubBuildTime = 4;
+const commercialParkBuildTime = 10;
+const theaterEarning = 1500;
+const pubEarning = 1000;
+const commercialParkEarning = 3000;
 
-  let maxEarnings = 0
-  let solutions = []
+// Main
+const earningCombinations = generateEarningCombinations();
+printMaxEarnings(earningCombinations);
 
-  function exploreCombinations(remainingTime, theatres, pubs, parks, earnings, currentSolution) {
-    if (remainingTime < 0) return
-    if (earnings > maxEarnings) {
-      maxEarnings = earnings
-      solutions = [currentSolution]
-    } else if (earnings === maxEarnings) {
-      solutions.push(currentSolution)
-    }
-    if (theatres < maxTheatres) {
-      exploreCombinations(
-        remainingTime - 5,
-        theatres + 1,
-        pubs,
-        parks,
-        earnings + (remainingTime - 5) * 1500,
-        [...currentSolution, 'T']
-      )
-    }
-    if (pubs < maxPubs) {
-      exploreCombinations(
-        remainingTime - 4,
-        theatres,
-        pubs + 1,
-        parks,
-        earnings + (remainingTime - 4) * 1000,
-        [...currentSolution, 'P']
-      )
-    }
-    if (parks < maxParks) {
-      exploreCombinations(
-        remainingTime - 10,
-        theatres,
-        pubs,
-        parks + 1,
-        earnings + (remainingTime - 10) * 3000,
-        [...currentSolution, 'C']
-      )
+// Find maximum possible combinations and their earnings
+function generateEarningCombinations() {
+  const maxTheater = Math.floor(timeUnit / theaterBuildTime);
+  const maxPub = Math.floor(timeUnit / pubBuildTime);
+  const maxCommercial = Math.floor(timeUnit / commercialParkBuildTime);
+
+  const combinations = [];
+
+  for (let theaterQty = 0; theaterQty <= maxTheater; theaterQty++) {
+    for (let pubQty = 0; pubQty <= maxPub; pubQty++) {
+      for (
+        let commercialParkQty = 0;
+        commercialParkQty <= maxCommercial;
+        commercialParkQty++
+      ) {
+        const totalBuildTime =
+          theaterBuildTime * theaterQty +
+          pubBuildTime * pubQty +
+          commercialParkBuildTime * commercialParkQty;
+        if (totalBuildTime <= timeUnit) {
+          const earnings = calculateEarnings(
+            commercialParkQty,
+            theaterQty,
+            pubQty,
+            timeUnit
+          );
+          combinations.push({
+            E: earnings,
+            C: commercialParkQty,
+            T: theaterQty,
+            P: pubQty,
+          });
+        } else break;
+      }
     }
   }
 
-  exploreCombinations(timeUnit, 0, 0, 0, 0, [])
-
-  const output = solutions.map(solution => {
-    const counts = { T: 0, P: 0, C: 0 }
-    solution.forEach(property => counts[property]++)
-    return `T: ${counts.T} P: ${counts.P} C: ${counts.C}`
-  })
-
-  return [maxEarnings, output]
+  return combinations;
 }
 
-const testCases = [
-  [7, 3000],
-  [8, 4500],
-  [13, 16500],
-]
+// Function to calculate earnings
+function calculateEarnings(comParkCount, theatreCount, pubCount, totalTime) {
+  let totalEarning = 0;
 
-testCases.forEach(([timeUnit, expectedEarnings]) => {
-  const [earnings, solution] = maxProfit(timeUnit)
-  console.log(`Time Unit: ${timeUnit}`)
-  console.log(`Earnings: $${earnings}`)
-  if (earnings === expectedEarnings) {
-    console.log("Solutions:")
-    solution.forEach((sol, index) => {
-      console.log(`${index + 1}. ${sol}`)
-    })
-  } else {
-    console.log("Incorrect solution!")
+  // Commercial park earnings
+  for (let i = 1; i <= comParkCount; i++) {
+    totalEarning +=
+      commercialParkEarning * (totalTime - commercialParkBuildTime * i);
   }
-  console.log()
-})
+
+  // Theater earnings
+  for (let i = 1; i <= theatreCount; i++) {
+    totalEarning +=
+      theaterEarning *
+      (totalTime -
+        (commercialParkBuildTime * comParkCount + theaterBuildTime * i));
+  }
+
+  // Pub earnings
+  for (let i = 1; i <= pubCount; i++) {
+    totalEarning +=
+      pubEarning *
+      (totalTime -
+        (commercialParkBuildTime * comParkCount +
+          theaterBuildTime * theatreCount +
+          pubBuildTime * i));
+  }
+
+  return totalEarning;
+}
+
+// Print combinations with maximum earnings
+function printMaxEarnings(combinations) {
+  combinations.sort((a, b) => b.E - a.E);
+  const maxEarning = combinations[0].E;
+  console.log(`Time Unit: ${timeUnit}`);
+  console.log(`Earnings: $${maxEarning}\nSolutions`);
+
+  for (const [index, combination] of combinations.entries()) {
+    if (combination.E === maxEarning) {
+      console.log(
+        `   ${index + 1}. T:${combination.T} P:${combination.P} C:${
+          combination.C
+        }`
+      );
+    } else {
+      break;
+    }
+  }
+}
+// Constants
+const timeUnit = 13;
+const theaterBuildTime = 5;
+const pubBuildTime = 4;
+const commercialParkBuildTime = 10;
+const theaterEarning = 1500;
+const pubEarning = 1000;
+const commercialParkEarning = 3000;
+
+// Main
+const earningCombinations = generateEarningCombinations();
+printMaxEarnings(earningCombinations);
+
+// Find maximum possible combinations and their earnings
+function generateEarningCombinations() {
+  const maxTheater = Math.floor(timeUnit / theaterBuildTime);
+  const maxPub = Math.floor(timeUnit / pubBuildTime);
+  const maxCommercial = Math.floor(timeUnit / commercialParkBuildTime);
+
+  const combinations = [];
+
+  for (let theaterQty = 0; theaterQty <= maxTheater; theaterQty++) {
+    for (let pubQty = 0; pubQty <= maxPub; pubQty++) {
+      for (
+        let commercialParkQty = 0;
+        commercialParkQty <= maxCommercial;
+        commercialParkQty++
+      ) {
+        const totalBuildTime =
+          theaterBuildTime * theaterQty +
+          pubBuildTime * pubQty +
+          commercialParkBuildTime * commercialParkQty;
+        if (totalBuildTime <= timeUnit) {
+          const earnings = calculateEarnings(
+            commercialParkQty,
+            theaterQty,
+            pubQty,
+            timeUnit
+          );
+          combinations.push({
+            E: earnings,
+            C: commercialParkQty,
+            T: theaterQty,
+            P: pubQty,
+          });
+        } else break;
+      }
+    }
+  }
+
+  return combinations;
+}
+
+// Function to calculate earnings
+function calculateEarnings(comParkCount, theatreCount, pubCount, totalTime) {
+  let totalEarning = 0;
+
+  // Commercial park earnings
+  for (let i = 1; i <= comParkCount; i++) {
+    totalEarning +=
+      commercialParkEarning * (totalTime - commercialParkBuildTime * i);
+  }
+
+  // Theater earnings
+  for (let i = 1; i <= theatreCount; i++) {
+    totalEarning +=
+      theaterEarning *
+      (totalTime -
+        (commercialParkBuildTime * comParkCount + theaterBuildTime * i));
+  }
+
+  // Pub earnings
+  for (let i = 1; i <= pubCount; i++) {
+    totalEarning +=
+      pubEarning *
+      (totalTime -
+        (commercialParkBuildTime * comParkCount +
+          theaterBuildTime * theatreCount +
+          pubBuildTime * i));
+  }
+
+  return totalEarning;
+}
+
+// Print combinations with maximum earnings
+function printMaxEarnings(combinations) {
+  combinations.sort((a, b) => b.E - a.E);
+  const maxEarning = combinations[0].E;
+  console.log(`Time Unit: ${timeUnit}`);
+  console.log(`Earnings: $${maxEarning}\nSolutions`);
+
+  for (const [index, combination] of combinations.entries()) {
+    if (combination.E === maxEarning) {
+      console.log(
+        `   ${index + 1}. T:${combination.T} P:${combination.P} C:${
+          combination.C
+        }`
+      );
+    } else {
+      break;
+    }
+  }
+}
