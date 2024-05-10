@@ -1,5 +1,5 @@
 // Constants
-const timeUnit = 14
+const timeUnit = 49
 const theaterBuildTime = 5
 const pubBuildTime = 4
 const commercialParkBuildTime = 10
@@ -30,7 +30,7 @@ function generateEarningCombinations() {
           theaterBuildTime * theaterQty +
           pubBuildTime * pubQty +
           commercialParkBuildTime * commercialParkQty
-        if (totalBuildTime <= timeUnit) {
+        if (totalBuildTime < timeUnit) {
           const earnings = calculateEarnings(
             commercialParkQty,
             theaterQty,
@@ -92,7 +92,7 @@ function printMaxEarnings(combinations) {
   for (const [index, combination] of combinations.entries()) {
     if (combination.E === maxEarning) {
       console.log(
-        `   ${index + 1}. C:${combination.C} T:${combination.T} P:${combination.P} `
+        `   ${index + 1}. T:${combination.T} P:${combination.P} C:${combination.C} `
       )
     } else {
       break
