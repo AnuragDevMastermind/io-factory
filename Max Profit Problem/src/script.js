@@ -1,5 +1,5 @@
 // Constants
-const timeUnit = 7
+const timeUnit = 14
 const theaterBuildTime = 5
 const pubBuildTime = 4
 const commercialParkBuildTime = 10
@@ -92,9 +92,7 @@ function printMaxEarnings(combinations) {
   for (const [index, combination] of combinations.entries()) {
     if (combination.E === maxEarning) {
       console.log(
-        `   ${index + 1}. T:${combination.T} P:${combination.P} C:${
-          combination.C
-        }`
+        `   ${index + 1}. C:${combination.C} T:${combination.T} P:${combination.P} `
       )
     } else {
       break
